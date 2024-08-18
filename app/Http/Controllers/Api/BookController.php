@@ -13,11 +13,6 @@ class BookController extends Controller
 {
     protected $token;
 
-    // public function __construct()
-    // {
-    //     $this->token = request()->bearerToken();
-    // }
-
     public function index()
     {
         $books = Book::latest()->paginate(5);
@@ -113,6 +108,8 @@ class BookController extends Controller
 
     public function update(Request $request, $id)
     {
+        // return response()->json($request);
+
         $validator = Validator::make($request->all(), [
             'isbn' => 'required|string|max:255',
             'title' => 'required|string|max:255',
@@ -146,31 +143,19 @@ class BookController extends Controller
             ], 403);
         }
 
-        $book->update([
-            'isbn' => $request->isbn,
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'author' => $request->author,
-            'published' => $request->published,
-            'publisher' => $request->publisher,
-            'pages' => $request->pages,
-            'description' => $request->description,
-            'website' => $request->website,
-        ]);
+        $book->update($request->only([
+            'isbn',
+            'title',
+            'subtitle',
+            'author',
+            'published',
+            'publisher',
+            'pages',
+            'description',
+            'website',
+        ]));
 
-        return response()->json([
-            'isbn' => $request->isbn,
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'author' => $request->author,
-            'published' => $request->published,
-            'publisher' => $request->publisher,
-            'pages' => $request->pages,
-            'description' => $request->description,
-            'website' => $request->website,
-            'created_at' => $request->created_at,
-            'updated_at' => $request->updated_at,
-        ], 200);
+        return response()->json($book, 200);
     }
 
     public function destroy($id)
