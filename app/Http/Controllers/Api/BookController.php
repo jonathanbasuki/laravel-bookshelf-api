@@ -108,8 +108,6 @@ class BookController extends Controller
 
     public function update(Request $request, $id)
     {
-        // return response()->json($request);
-
         $validator = Validator::make($request->all(), [
             'isbn' => 'required|string|max:255',
             'title' => 'required|string|max:255',
